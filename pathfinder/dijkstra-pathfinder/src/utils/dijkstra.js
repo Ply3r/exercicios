@@ -1,3 +1,10 @@
+function generatePath(maze) {
+  const array = maze.split('\n');
+
+  const path = array.map((str) => str.split(''));
+  return path;
+}
+
 function generateFirstShortDistance(array) {
   const shortDistances = array.map((value, index) => { 
     const newValue = value.map((_currValue, currIndex) => {
@@ -11,13 +18,6 @@ function generateFirstShortDistance(array) {
   })
   
   return shortDistances
-}
-
-function generatePath(maze) {
-  const array = maze.split('\n');
-
-  const path = array.map((str) => str.split(''));
-  return path;
 }
 
 function pathFinder(maze){
