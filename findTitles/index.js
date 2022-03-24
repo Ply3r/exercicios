@@ -1,60 +1,33 @@
 const { readFileSync } = require('fs');
 
-const components = (array) => {
+const components = (object) => {
   const result = [];
 
-  array.forEach((value) => {
-    function componentsExist(obj) { 
-      if (!obj) return;
+  function componentsExist(obj) { 
+    if (!obj) return;
 
-      obj.component ? result.push(obj.component) : ''
-      
-      const filters = obj.filters || []
-      const sort = obj.sort || []
-      const columns = obj.columns || []
-      const components = obj.components || [];
-  
-      components.forEach((children) => {
-        result.push(children.component)
+    obj.component ? result.push(obj.component) : ''
 
-        componentsExist(children.settings)
-      });
+    const values = Object.values(obj);
 
-      filters.forEach((children) => {
-        result.push(children.component)
+    values.forEach((value) => {
+      if (Array.isArray(value) && typeof value[0] === 'object') {
+        value.forEach((newObj) => componentsExist(newObj))
+      } else if (typeof value === 'object') {
+        componentsExist(value)
+      }
+    })
+  }
 
-        componentsExist(children.settings)
-      });
-
-      sort.forEach((children) => {
-        result.push(children.component)
-
-        componentsExist(children.settings)
-      });
-
-      columns.forEach((children) => {
-        result.push(children.component)
-
-        componentsExist(children.settings)
-      });
-
-      componentsExist(obj.settings)
-      componentsExist(obj.filters_collection)
-      componentsExist(obj.sort_collection)
-      componentsExist(obj.footer_collection)
-    }
-
-    componentsExist(value)
-  })
-
+  componentsExist(object);
   return result;
 }
 
 const showComponents = () => {
-  const json = readFileSync('exercise-interview/teste-json.json', 'utf-8');
-  const array = JSON.parse(json);
+  const json = readFileSync('teste-json.json', 'utf-8');
+  const objeto = JSON.parse(json);
 
-  const result = components(array.components)
+  const result = components(objeto)
 
   return result;
 }
