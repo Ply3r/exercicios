@@ -1,4 +1,4 @@
-const Table = ({ array, path }) => {
+const Table = ({ array, path, shortWay }) => {
   const elements = array.map((column, cIndex) => {
     const rows = column.map((row, rIndex) => {
       let tdClassName = '';
@@ -13,6 +13,10 @@ const Table = ({ array, path }) => {
 
       if (rIndex === 0 && cIndex === 0) tdClassName = 'start';
       if (rIndex === column.length - 1 && cIndex === array.length - 1) tdClassName = 'finish';
+      
+    
+      // const testShort = shortWay.some(([g, l]) => g === cIndex && l === rIndex);
+      // if (testShort) tdClassName = 'finish';
 
       return (
         <td className={ tdClassName } />
