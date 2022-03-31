@@ -1,22 +1,16 @@
-import { useEffect, useState } from 'react';
-import dijkstra from '../utils/dijkstra.js';
+import { useContext } from 'react';
 import Table from './Table.jsx';
+import Menu from './Menu.jsx';
+import { mainContext } from '../provider/mainProvider';
 import '../css/app.css'
 
 function App() {
-  const [dijkstraPath, setDijkstraPath] = useState([]);
-  const [dijkstraArray, setDijkstraArray] = useState([]);
-  const [dijkstraShort, setDijkstraShort] = useState([]);
-
-  useEffect(() => {
-    setDijkstraPath(dijkstra.path)
-    setDijkstraArray(dijkstra.distancePaths)
-    // setDijkstraShort(dijkstra.shortWay)
-  }, [dijkstra])
+  const { setDijkstraArray, setDijkstraPath } = useContext(mainContext)
 
   return (
     <div className='main-container'>
-      { !!dijkstraArray.length && <Table array={ dijkstraArray } path={ dijkstraPath } shortWay={ dijkstraShort } /> }
+      <Menu />
+      <Table />
     </div>
   );
 }

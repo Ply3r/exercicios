@@ -1,36 +1,12 @@
-const Table = ({ array, path, shortWay }) => {
-  const elements = array.map((column, cIndex) => {
-    const rows = column.map((row, rIndex) => {
-      let tdClassName = '';
+import { mainContext } from '../provider/mainProvider';
+import { useContext } from 'react';
 
-      if (row === Infinity && path[cIndex][rIndex] === 'W') {
-        tdClassName = 'wall';
-      } else if (row === Infinity) {
-        tdClassName = 'blank';
-      } else {
-        tdClassName = 'path';
-      }
-
-      if (rIndex === 0 && cIndex === 0) tdClassName = 'start';
-      if (rIndex === column.length - 1 && cIndex === array.length - 1) tdClassName = 'finish';
-      
-    
-      // const testShort = shortWay.some(([g, l]) => g === cIndex && l === rIndex);
-      // if (testShort) tdClassName = 'finish';
-
-      return (
-        <td className={ tdClassName } />
-      )
-    })
-
-    return (
-      <tr>{ rows }</tr>
-    )
-  })
+const Table = () => {
+  const { elements } = useContext(mainContext);
 
   return (
     <table className="labirinth">
-      { elements }
+      { !!elements && elements }
     </table>
   );
 }

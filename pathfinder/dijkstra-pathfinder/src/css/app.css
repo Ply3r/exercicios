@@ -22,7 +22,7 @@ body, #root {
 }
 
 .labirinth td {
-  border: 2px solid transparent;
+  border: 1px solid black;
 }
 
 .wall {
