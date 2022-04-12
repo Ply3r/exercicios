@@ -12,7 +12,7 @@ const Box = ({ className }) => {
 
   return (
     <td 
-      onMouseEnter={ () => {
+      onMouseOver={ () => {
         if (mouseActive) {
           setActive(!active);
           setNewType();
