@@ -44,9 +44,9 @@ const Menu = () => {
       </button>
       <button onClick={ clearMaze }>Clear</button>
       <div>
-        <button onClick={ () => setType('wall') }>Wall</button>
-        <button onClick={ () => setType('start') }>Start</button>
-        <button onClick={ () => setType('finish') }>Finish</button>
+        <button className="menu-bot wall" onClick={ () => setType('wall') } />
+        <button className="menu-bot start" onClick={ () => setType('start') } />
+        <button className="menu-bot finish" onClick={ () => setType('finish') } />
       </div>
     </div>
   )
