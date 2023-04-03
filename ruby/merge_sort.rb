@@ -1,9 +1,9 @@
 require_relative 'randint_array'
 
 # Tempo ~ 0.971s
-def my_sort_algo2(array)
-  left = my_sort_algo2(array[0..((array.length) / 2).floor - 1]) unless array.length <= 2
-  right = my_sort_algo2(array[(((array.length) / 2).floor)..array.length - 1]) unless array.length <= 2
+def merge_sort(array)
+  left = merge_sort(array[0..((array.length) / 2).floor - 1]) unless array.length <= 2
+  right = merge_sort(array[(((array.length) / 2).floor)..array.length - 1]) unless array.length <= 2
 
   sorted = left || right ? [*left, *right] : array
 
@@ -23,4 +23,4 @@ def my_sort_algo2(array)
 end
 
 array = randint_array(100000)
-sorted_array = my_sort_algo2(array)
+sorted_array = merge_sort(array)

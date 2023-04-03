@@ -1,7 +1,7 @@
 require_relative 'randint_array'
 
 # Tempo 10.000 ~ 4.739s
-def my_sort_algo(array)
+def bubble_sort(array)
   is_sorted = false
 
   while !is_sorted
@@ -22,5 +22,5 @@ def my_sort_algo(array)
 end
 
 array = randint_array(100)
-sorted_array = my_sort_algo(array)
+sorted_array = bubble_sort(array)
 puts sorted_array.to_s
