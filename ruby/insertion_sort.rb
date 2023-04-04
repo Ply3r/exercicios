@@ -21,6 +21,5 @@ def insertion_sort(array, direction = :asc)
   array
 end
 
-array = randint_array(100000)
+array = randint_array(10000)
 sorted_array = insertion_sort(array)
-puts sorted_array.to_s

@@ -1,26 +1,21 @@
 require_relative 'randint_array'
 
-# Tempo ~ 0.971s
+# Tempo 10.000 ~ 0.049s
 def merge_sort(array)
-  left = merge_sort(array[0..((array.length) / 2).floor - 1]) unless array.length <= 2
-  right = merge_sort(array[(((array.length) / 2).floor)..array.length - 1]) unless array.length <= 2
+  return array if array.length <= 1
 
-  sorted = left || right ? [*left, *right] : array
+  middle = ((array.length) / 2).floor
+  left_array = merge_sort(array[0..middle - 1])
+  right_array = merge_sort(array[middle..array.length - 1])
 
-  for i in 1..sorted.length - 1
-    key = sorted[i]
-    k = i
+  result = []
 
-    while k > 0 && key < sorted[k - 1]
-      sorted[k] = sorted[k - 1]
-      k -= 1
-    end
-
-    sorted[k] = key
+  until left_array.empty? || right_array.empty?
+    result << (left_array.first < right_array.first ? left_array.shift : right_array.shift)
   end
 
-  sorted
+  result.concat(left_array).concat(right_array)
 end
 
-array = randint_array(100000)
+array = randint_array(10000)
 sorted_array = merge_sort(array)
