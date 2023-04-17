@@ -1,7 +1,7 @@
 require_relative 'randint_array'
 require 'byebug'
 
-# Tempo ~ 0.049s
+# Tempo ~ 0.080s
 def quick_sort(array)
   return array if array.length <= 1
 
