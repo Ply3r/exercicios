@@ -10,53 +10,63 @@ class MineSweeper
     generate_game
   end
 
-  def open(row:, column:)
+  def open(row, column)
     puts 'select a row and a column' and return if row.nil? && column.nil?
-    result = @game_resolved[row][column]
 
-    if result == 'x'
-      show_game
-      puts 'OMG!! You hit the mine :('
+    result = @game_resolved[row][column]
+    @game[row][column] = result
+    show_game
+
+    is_winner = check_game_win
+    if result == 'x' || is_winner
+      show_game(game: @game_resolved)
 
       @game = []
       @game_resolved = []
-      return
+      raise Exception.new 'OMG! You hit the mine :(' unless is_winner
     end
 
-    @game[row][column] = result
-    show_game
+    result
   end
 
-  def show_game
-    @game.each do |row|
+  def show_game(game: @game)
+    str = ''
+    game.each do |row|
+      str += row.join(' ') + '\n'
       puts row.join(' ')
     end
 
-    return
+    puts ' '
+    return str
   end
 
   private
 
   def check_game_win
-    @game.all? do |row|
-      
+    is_winner = true
+
+    @game.each_with_index do |row, r_index|
+      break unless is_winner
+
+      row.each_with_index do |col, c_index|
+        if col == '?' && @game_resolved[r_index][c_index] != 'x'
+          is_winner = false
+          break
+        end
+      end
     end
+
+    puts "Congratulations you win the game! :)" if is_winner
   end
 
   def generate_game
+    puts "Lets start!"
     total_mines = 0
 
     for r in 1..@size
       row = []
       for c in 1..@size
-        sorted_num = rand(@size)
         cell = '?'
-
-        if sorted_num == 1 && total_mines < @mine_qnt
-          cell = 'x'
-          total_mines += 1
-        end
-
         row << cell
       end
 
@@ -64,8 +74,15 @@ class MineSweeper
       @game_resolved << row
     end
 
+    add_mines
     resolve_game
-    show_game
+  end
+
+  def add_mines
+    for i in 0..@mine_qnt
+      row, col = rand(@size - 1), rand(@size - 1)
+      @game_resolved[row][col] = 'x'
+    end
   end
 
   def check_neighboors(pos)
@@ -79,8 +96,8 @@ class MineSweeper
       matrix[r + 1] ? matrix[r + 1][c] : nil,
       matrix[r + 1] ? matrix[r + 1][c + 1] : nil,
       matrix[r + 1] ? matrix[r + 1][c - 1] : nil,
-      matrix[r][c + 1] ? matrix[r][c + 1] : nil,
-      matrix[r][c - 1] ? matrix[r][c - 1] : nil,
+      matrix[r][c + 1],
+      matrix[r][c - 1],
       matrix[r - 1] ? matrix[r - 1][c] : nil,
       matrix[r - 1] ? matrix[r - 1][c + 1] : nil,
       matrix[r - 1] ? matrix[r - 1][c - 1] : nil,

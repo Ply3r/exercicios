@@ -1,65 +1,80 @@
 require 'byebug'
-require_relative 'randint_array'
+require_relative 'helper'
 
 class BinaryTree
   attr_accessor :value
   attr_accessor :left
   attr_accessor :right
 
-  def initialize(value:, left: nil, right: nil)
+  def initialize(value: nil, left: nil, right: nil)
     @value = value
     @left = left
     @right = right
   end
 
   def to_array
-    array = []
-    get_all_values(self, array)
-
-    array
+    sorted_list(self, [])
   end
 
   def insert(item)
-    find_and_insert(item, self)
+    if !self.value
+      self.value = item.value
+      self.left = item.left
+      self.right = item.right
+      return
+    end
+
+    x = self
+    y = nil
+
+    while x != nil
+      y = x
+
+      if item.value < x.value
+        x = x.left
+      else
+        x = x.right
+      end
+    end
+
+    item.value < y.value ? y.left = item : y.right = item
   end
 
-  def find(value)
+  def find(item)
+    result = nil
+    x = self
 
+    while x != nil
+      if x.value == item
+        result = x
+        break
+      end
+
+      if item < x.value
+        x = x.left
+      else
+        x = x.right
+      end
+    end
+
+    result
   end
 
   private
 
-  def find_node(value, node)
-
-  end
-
-  def find_and_insert(item, node = self)
-    return item if node.nil?
-
-    value = item.value
-
-    if value <= node.value
-      node.left = find_and_insert(item, node.left)
-    else
-      node.right = find_and_insert(item, node.right)
-    end
-
-    node
-  end
-
-  def get_all_values(node, array)
+  def sorted_list(node, array)
     return if node.nil?
 
-    get_all_values(node.left, array)
-    get_all_values(node.right, array)
-
+    sorted_list(node.left, array)
     array.push(node.value)
+    sorted_list(node.right, array)
+    array
   end
 end
 
-root = BinaryTree.new(value: 5)
+root = BinaryTree.new
 
-array = [3, 7, 2, 4, 9, 6]
+array = Helper.randint_array(1000)
 array.each { |value| root.insert(BinaryTree.new(value: value)) }
 
 puts root.to_array.to_s
