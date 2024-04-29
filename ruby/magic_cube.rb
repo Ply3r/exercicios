@@ -1,4 +1,5 @@
 require 'byebug'
+require 'sinatra'
 
 class MagicCube
   private
@@ -15,15 +16,17 @@ class MagicCube
 
   AMOUNT_OF_SHUFFLE = 25
 
+  ORIGINAL_CUBE = [
+    ['W'] * 9,
+    ['B'] * 9,
+    ['Y'] * 9,
+    ['O'] * 9,
+    ['G'] * 9,
+    ['R'] * 9,
+  ]
+
   def initialize
-    @cube = [
-      ['W'] * 9,
-      ['B'] * 9,
-      ['Y'] * 9,
-      ['O'] * 9,
-      ['G'] * 9,
-      ['R'] * 9,
-    ]
+    restart
   end
 
   def make_rotation(faces, range)
@@ -32,25 +35,37 @@ class MagicCube
     current_blocks = first_face[range]
 
     faces.each do |index, face|
+      rotate_start(face) if range.to_a[-1] == 8
+
       hold = face[range]
-      hold_last_block = face[-1]
       face[range] = current_blocks
       cube[index] = face
       current_blocks = hold
 
-      if cube[index][-1] != hold_last_block
-        modified_block = cube[index][-1] 
-        cube[index][-1] = hold_last_block
-        cube[index][0] = modified_block
-      end
+      rotate_end(index) unless cube[index][-1] == ORIGINAL_CUBE[index][-1]
     end
 
     cube
   end
 
+  def rotate_start(face)
+    hold = face[0]
+    face[0] = face[-1]
+    face[-1] = hold
+  end
+
+  def rotate_end(index)
+    modified_block = cube[index][-1] 
+    cube[index][-1] = ORIGINAL_CUBE[index][-1]
+    cube[index][0] = modified_block
+  end
 
   public
   attr_reader :cube
+
+  def restart
+    self.cube = Marshal.load(Marshal.dump(ORIGINAL_CUBE))
+  end
 
   def shuffle
     legal_moviments = {
@@ -76,6 +91,20 @@ end
 
 magic_cube = MagicCube.new
 
-puts magic_cube.cube.to_s
-magic_cube.shuffle
-puts magic_cube.cube.to_s
+get '/cube' do
+  magic_cube.cube.to_json
+end
+
+get '/cube/restart' do
+  magic_cube.restart.to_json
+end
+
+get '/cube/shuffle' do
+  magic_cube.shuffle.to_json
+end
+
+get '/cube/rotate/:side/:direction' do
+  side = params[:side].to_sym
+  direction = params[:direction].to_sym
+  magic_cube.rotate(side, direction).to_json
+end
